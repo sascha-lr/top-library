@@ -1,6 +1,7 @@
 "use strict";
 
 const myLibrary = [];
+const bookShelf = document.querySelector('.books');
 
 function Book(title, author, pages, read) {
     if (!new.target) {
@@ -10,16 +11,19 @@ function Book(title, author, pages, read) {
     this.author = author;
     this.pages = pages;
     this.read = read;
+    this.id = crypto.randomUUID();
+}
+
+Book.prototype.toggleRead = function() {
+    this.read = !this.read;
 }
 
 function addBookToLibrary(title, author, pages, read) {
     const newBook = new Book(title, author, pages, read);
-    newBook.id = crypto.randomUUID();
     myLibrary.push(newBook);
 }
 
 function displayBooks() {
-    const bookShelf = document.querySelector('.books');
     for (let book of myLibrary) {
 
         if (document.querySelector(`.book[data-id="${book.id}"]`)) continue;
@@ -29,15 +33,15 @@ function displayBooks() {
         div.dataset.id = book.id;
 
         const button = document.createElement('button');
-        button.id = 'remove';
+        button.classList.add('remove');
 
         let size = 2;
         for (const property in book) {
-            if (property === 'id') continue;
+            if (property === 'id' || property === 'toggleRead') continue;
             if (property === 'read') {
                 const readCheckBox = document.createElement('input');
                 readCheckBox.type = 'checkbox';
-                readCheckBox.id = 'read-check-box';
+                readCheckBox.classList.add('read-check-box');
                 if (book.read === true) readCheckBox.checked = true;
                 div.appendChild(readCheckBox);
                 continue;
@@ -52,32 +56,30 @@ function displayBooks() {
     }
 }
 
-window.addEventListener('click', (e) => {
-    switch (e.target.id) {
-        case 'add-book-dialog':
+bookShelf.addEventListener('click', (e) => {
+    switch (true) {
+        case e.target.id === 'add-book-dialog':
             e.target.close();
             break;
-        case 'add':
-            const title = document.querySelector('#title');
-            const author = document.querySelector('#author');
-            const pages = document.querySelector('#pages');
-            const read = document.querySelector('#read');
-            addBookToLibrary(title.value, author.value, pages.value, read.checked);
+        case e.target.id === 'add':
+            e.preventDefault();
+            document.querySelector('#add-book-dialog').close();
+            const form = new FormData(document.querySelector('form'));
+            addBookToLibrary(form.get('title'), form.get('author'), form.get('pages'), form.get('read') === 'on');
             displayBooks();
             break;
-        case 'remove':
-            const found = myLibrary.find((book) => {
+        case e.target.classList.contains('remove'):
+            const found = myLibrary.findIndex((book) => {
                 return book.id === e.target.parentElement.dataset.id;
             });
-            const index = myLibrary.indexOf(found);
-            myLibrary.splice(index, 1);
-            e.target.parentElement.remove();
+            myLibrary.splice(found, 1);
+            e.target.closest('.book').remove();
             break;
-        case 'read-check-box':
+        case e.target.classList.contains('read-check-box'):
             const book = myLibrary.find((book) => {
                 return book.id === e.target.parentElement.dataset.id;
             });
-            book.read = !book.read;
+            book.toggleRead();
         default:
             break;
     }
