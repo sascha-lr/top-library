@@ -1,7 +1,6 @@
 "use strict";
 
 const myLibrary = [];
-const bookShelf = document.querySelector('.books');
 
 function Book(title, author, pages, read) {
     if (!new.target) {
@@ -24,39 +23,46 @@ function addBookToLibrary(title, author, pages, read) {
 }
 
 function displayBooks() {
+    const bookShelf = document.querySelector('.book-shelf');
     for (let book of myLibrary) {
 
         if (document.querySelector(`.book[data-id="${book.id}"]`)) continue;
 
-        const div = document.createElement('div');
-        div.classList.add('book');
-        div.dataset.id = book.id;
+        const bookCover = document.createElement('div');
+        bookCover.classList.add('book');
+        bookCover.dataset.id = book.id;
 
-        const button = document.createElement('button');
-        button.classList.add('remove');
 
-        let size = 2;
-        for (const property in book) {
-            if (property === 'id' || property === 'toggleRead') continue;
-            if (property === 'read') {
-                const readCheckBox = document.createElement('input');
-                readCheckBox.type = 'checkbox';
-                readCheckBox.classList.add('read-check-box');
-                if (book.read === true) readCheckBox.checked = true;
-                div.appendChild(readCheckBox);
-                continue;
-            }
-            const text = document.createElement(`h${size}`);
-            text.innerText = book[property];
-            div.appendChild(text);
-            size++;
-        }
-        div.appendChild(button);
-        bookShelf.appendChild(div);
+        const title = document.createElement('h2');
+        title.innerText = book.title;
+        title.classList.add('title');
+        bookCover.appendChild(title);
+
+        const author = document.createElement('h3');
+        author.innerText = book.author;
+        author.classList.add('author');
+        bookCover.appendChild(author);
+
+        const pages = document.createElement('p');
+        pages.innerText = book.pages;
+        pages.classList.add('pages');
+        bookCover.appendChild(pages);
+
+        const readCheckBox = document.createElement('input');
+        readCheckBox.type = 'checkbox';
+        readCheckBox.classList.add('read-check-box');
+        if (book.read) readCheckBox.checked = true;
+        bookCover.appendChild(readCheckBox);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.classList.add('remove');
+        bookCover.appendChild(removeBtn);
+
+        bookShelf.appendChild(bookCover);
     }
 }
 
-bookShelf.addEventListener('click', (e) => {
+document.querySelector('main').addEventListener('click', (e) => {
     switch (true) {
         case e.target.id === 'add-book-dialog':
             e.target.close();
@@ -80,7 +86,6 @@ bookShelf.addEventListener('click', (e) => {
                 return book.id === e.target.parentElement.dataset.id;
             });
             book.toggleRead();
-        default:
             break;
     }
 })
