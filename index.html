@@ -12,9 +12,43 @@
 <body>
 
     <main>
-        <button type="button" id="new" command="show-modal" commandfor="add-book-dialog">New Book?</button>
 
-        <div class="book-shelf">
+        <div class="books">
+            <div class="shelf">
+                <div class="book">
+                    <h2 class="title">Hobbit</h2>
+                    <h3 class="author">Tolkien</h3>
+                </div>
+                <div class="book">
+                    <h2 class="title">Vagabond</h2>
+                    <h3 class="author">Inoue</h3>
+                    <p class="pages">Pages: 835</p>
+                    <label for="read-check-box">Read?
+                        <input type="checkbox" class="read-check-box">
+                    </label>
+                    <button class="remove">Remove</button>
+                </div>
+                <div class="book">
+                    <h2 class="title">Atomic Habits</h2>
+                    <h3 class="author">James Clear</h3>
+                    <p class="pages">Pages: 807</p>
+                    <label for="read-check-box">Read?
+                        <input type="checkbox" class="read-check-box">
+                    </label>
+                    <button class="remove"></button>
+                </div>
+            </div>
+            <div class="shelf">
+                <div class="book">
+                    <h2 class="title">Atomic Habits</h2>
+                    <h3 class="author">James Clear</h3>
+                    <p class="pages">Pages: 807</p>
+                    <label for="read-check-box">Read?
+                        <input type="checkbox" class="read-check-box">
+                    </label>
+                    <button class="remove"></button>
+                </div>
+            </div>
         </div>
         <dialog id="add-book-dialog">
             <form action="" method="dialog">
@@ -34,6 +68,9 @@
                 <button type="submit" id="add">Add book to collection</button>
             </form>
         </dialog>
+
+        <button type="button" id="new" command="show-modal" commandfor="add-book-dialog">New Book?</button>
+
     </main>
 
 

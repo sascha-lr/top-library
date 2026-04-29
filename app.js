@@ -23,7 +23,8 @@ function addBookToLibrary(title, author, pages, read) {
 }
 
 function displayBooks() {
-    const bookShelf = document.querySelector('.book-shelf');
+    const books = document.querySelector('.books');
+    const bookShelf = document.querySelectorAll('.books .shelf');
     for (let book of myLibrary) {
 
         if (document.querySelector(`.book[data-id="${book.id}"]`)) continue;
@@ -58,7 +59,14 @@ function displayBooks() {
         removeBtn.classList.add('remove');
         bookCover.appendChild(removeBtn);
 
-        bookShelf.appendChild(bookCover);
+        if (bookShelf[bookShelf.length - 1].childElementCount >= 3) {
+            const shelf = document.createElement('div');
+            shelf.classList.add('shelf');
+            shelf.appendChild(bookCover);
+            books.appendChild(shelf);
+        } else {
+            bookShelf[bookShelf.length - 1].appendChild(bookCover);
+        }
     }
 }
 

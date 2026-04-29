@@ -1,3 +1,5 @@
+/* --- CSS RESET --- /*
+
 /* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,
@@ -75,12 +77,120 @@ h6 {
     isolation: isolate;
 }
 
-/* --- END OF CSS RESET --- */
+/* --- VARIABLES --- */
+
+:root {
+    --muted-teal: hsla(172, 19%, 62%, 1);
+    --charcoal-blue: hsla(203, 19%, 30%, 1);
+    --dark-slate-grey: hsla(169, 26%, 20%, 1);
+    --carbon-black: hsla(120, 5%, 11%, 1);
+    --onyx: hsla(164, 71%, 4%, 1);
+
+    --blood-red: hsla(8, 93%, 27%, 1);
+    --harvest-gold: hsla(39, 70%, 46%, 1);
+    --pale-oak: hsla(29, 45%, 80%, 1);
+    --saddle-brown: hsla(24, 50%, 34%, 1);
+    --dark-coffee: hsla(26, 55%, 16%, 1);
+}
+
+/* --- FONTS --- */
+
+
+/* instrument-serif-regular - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Instrument Serif';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./assets/fonts/instrument-serif-v5-latin-regular.woff2') format('woff2');
+    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* --- BASE ELEMENTS */
+
+body {
+    background-color: #200c05;
+}
+
+main {
+    padding: 2rem;
+    display: grid;
+    place-items: center;
+}
 
 dialog {
     padding: 0;
 }
 
 form {
-    padding: 1rem;
+    padding: 2vw;
+}
+
+/* --- CLASSES --- */
+
+.books {
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1rem solid #371808;
+}
+
+.shelf {
+    background-image: url('./assets/images/bookshelf.webp');
+    width: min(90vw, 936px);
+    background-size: cover;
+    padding: 3vw;
+    display: grid;
+    gap: 2vw;
+    justify-items: center;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.book {
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.61),
+        6px -1px 21px 0px rgba(255, 255, 255, 0.05) inset,
+        -6px -1px 21px 0px rgba(255, 255, 255, 0.05) inset;
+    gap: .5vw;
+    padding: 2vh 0;
+    border-radius: 1vw;
+    background-color: var(--carbon-black);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+.book .title {
+    font-family: 'Instrument Serif';
+    width: min-content;
+    padding: 1.5vh 2.5vw;
+    background-color: var(--charcoal-blue);
+}
+
+.book .author {
+    font-family: 'Instrument Serif';
+}
+
+.book>* {
+    text-align: center;
+}
+
+.remove {
+    align-self: center;
+    width: fit-content;
+}
+
+#new {
+    background-image: url('./assets/images/bookshelf.webp');
+    border-radius: .5rem;
+    color: white;
+    font-family: 'Instrument Serif';
+    font-weight: 900;
+    font-size: 2rem;
+    background-position: center;
+    border: 5px solid #371808;
+}
+
+#new:hover {
+    opacity: .5;
 }
