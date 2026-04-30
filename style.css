@@ -110,7 +110,7 @@ h6 {
 /* --- BASE ELEMENTS */
 
 body {
-    background-color: #200c05;
+    background-color: var(--onyx);
 }
 
 main {
@@ -120,11 +120,43 @@ main {
 }
 
 dialog {
+    border: 2px solid var(--harvest-gold);
+    background-color: var(--charcoal-blue);
+    border-radius: 1rem;
     padding: 0;
 }
 
 form {
-    padding: 2vw;
+    background-color: var(--charcoal-blue);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    accent-color: var(--harvest-gold);
+}
+
+h1 {
+    font-family: 'Instrument Serif';
+    font-weight: 900;
+    color: var(--harvest-gold);
+    margin-bottom: 2rem;
+}
+
+form h2 {
+    font-family: 'Instrument Serif';
+    color: var(--harvest-gold);
+}
+
+form fieldset {
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    background-color: var(--muted-teal);
+    border: none;
+    border: 2px solid var(--harvest-gold);
+    border-radius: .25rem;
 }
 
 /* --- CLASSES --- */
@@ -132,43 +164,46 @@ form {
 .books {
     border-radius: 1rem;
     overflow: hidden;
-    border: 1rem solid #371808;
+    border: 1rem solid var(--dark-coffee);
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.61);
 }
 
 .shelf {
     background-image: url('./assets/images/bookshelf.webp');
     width: min(90vw, 936px);
     background-size: cover;
-    padding: 3vw;
+    background-position: center;
+    padding: min(12vw, 3rem) .5rem;
     display: grid;
     gap: 2vw;
     justify-items: center;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, auto);
 }
 
 .book {
-    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.61),
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.8),
         6px -1px 21px 0px rgba(255, 255, 255, 0.05) inset,
         -6px -1px 21px 0px rgba(255, 255, 255, 0.05) inset;
-    gap: .5vw;
+    gap: 1rem;
     padding: 2vh 0;
-    border-radius: 1vw;
+    border-radius: .5rem;
     background-color: var(--carbon-black);
     color: white;
     display: flex;
     flex-direction: column;
     width: fit-content;
+    font-family: 'Instrument Serif';
+}
+
+.book p,
+label,
+button {
+    font-size: 1.125rem;
 }
 
 .book .title {
-    font-family: 'Instrument Serif';
-    width: min-content;
     padding: 1.5vh 2.5vw;
     background-color: var(--charcoal-blue);
-}
-
-.book .author {
-    font-family: 'Instrument Serif';
 }
 
 .book>* {
@@ -176,11 +211,35 @@ form {
 }
 
 .remove {
+    background-color: var(--charcoal-blue);
+    border: none;
+    border-radius: .5rem;
+    padding: .25rem .5rem;
+    color: white;
+    font-weight: 600;
     align-self: center;
     width: fit-content;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.remove:hover {
+    scale: 1.025;
+    background-color: var(--blood-red);
+}
+
+.pages {
+    border-top: 2px solid var(--harvest-gold);
+    padding-top: 1rem;
+}
+
+.read-checkbox {
+    accent-color: var(--harvest-gold);
 }
 
 #new {
+    cursor: pointer;
+    margin-top: 2rem;
     background-image: url('./assets/images/bookshelf.webp');
     border-radius: .5rem;
     color: white;
@@ -188,9 +247,11 @@ form {
     font-weight: 900;
     font-size: 2rem;
     background-position: center;
-    border: 5px solid #371808;
+    border: 5px solid var(--dark-coffee);
+    transition: all .3s ease;
 }
 
 #new:hover {
-    opacity: .5;
+    color: #371808;
+    scale: 1.05;
 }

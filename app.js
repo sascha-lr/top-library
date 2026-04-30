@@ -1,5 +1,7 @@
 "use strict";
 
+const books = document.querySelector('.books');
+
 const myLibrary = [];
 
 function Book(title, author, pages, read) {
@@ -23,16 +25,15 @@ function addBookToLibrary(title, author, pages, read) {
 }
 
 function displayBooks() {
-    const books = document.querySelector('.books');
-    const bookShelf = document.querySelectorAll('.books .shelf');
     for (let book of myLibrary) {
+
+        const bookShelf = document.querySelectorAll('.books .shelf');
 
         if (document.querySelector(`.book[data-id="${book.id}"]`)) continue;
 
         const bookCover = document.createElement('div');
         bookCover.classList.add('book');
         bookCover.dataset.id = book.id;
-
 
         const title = document.createElement('h2');
         title.innerText = book.title;
@@ -45,18 +46,19 @@ function displayBooks() {
         bookCover.appendChild(author);
 
         const pages = document.createElement('p');
-        pages.innerText = book.pages;
+        pages.innerText = `Pages: ${book.pages}`;
         pages.classList.add('pages');
         bookCover.appendChild(pages);
 
         const readCheckBox = document.createElement('input');
         readCheckBox.type = 'checkbox';
-        readCheckBox.classList.add('read-check-box');
+        readCheckBox.classList.add('read-checkbox');
         if (book.read) readCheckBox.checked = true;
         bookCover.appendChild(readCheckBox);
 
         const removeBtn = document.createElement('button');
         removeBtn.classList.add('remove');
+        removeBtn.innerText = 'Remove?';
         bookCover.appendChild(removeBtn);
 
         if (bookShelf[bookShelf.length - 1].childElementCount >= 3) {
@@ -83,13 +85,17 @@ document.querySelector('main').addEventListener('click', (e) => {
             displayBooks();
             break;
         case e.target.classList.contains('remove'):
+            const bookShelf = document.querySelectorAll('.books .shelf');
             const found = myLibrary.findIndex((book) => {
                 return book.id === e.target.parentElement.dataset.id;
             });
             myLibrary.splice(found, 1);
             e.target.closest('.book').remove();
+            for (let shelf of bookShelf) {
+                if (shelf.childElementCount <= 0) shelf.remove();
+            }
             break;
-        case e.target.classList.contains('read-check-box'):
+        case e.target.classList.contains('read-checkbox'):
             const book = myLibrary.find((book) => {
                 return book.id === e.target.parentElement.dataset.id;
             });
