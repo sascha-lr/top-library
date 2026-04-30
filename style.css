@@ -95,6 +95,38 @@ h6 {
 
 /* --- FONTS --- */
 
+/* inter-regular - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./assets/fonts/inter-v20-latin-regular.woff2') format('woff2');
+    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* inter-600 - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    src: url('./assets/fonts/inter-v20-latin-600.woff2') format('woff2');
+    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* inter-600italic - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Inter';
+    font-style: italic;
+    font-weight: 600;
+    src: url('./assets/fonts/inter-v20-latin-600italic.woff2') format('woff2');
+    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
 
 /* instrument-serif-regular - latin */
 @font-face {
@@ -108,6 +140,10 @@ h6 {
 }
 
 /* --- BASE ELEMENTS */
+
+* {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
 
 body {
     background-color: var(--onyx);
@@ -127,7 +163,7 @@ dialog {
 }
 
 form {
-    background-color: var(--charcoal-blue);
+    background-color: var(--dark-slate-grey);
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -136,27 +172,65 @@ form {
 }
 
 h1 {
-    font-family: 'Instrument Serif';
+    font-family: 'Instrument Serif', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: 900;
     color: var(--harvest-gold);
     margin-bottom: 2rem;
 }
 
 form h2 {
-    font-family: 'Instrument Serif';
+    font-family: 'Instrument Serif', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     color: var(--harvest-gold);
 }
 
 form fieldset {
+    gap: .25rem;
     display: flex;
     flex-direction: column;
+    border-color: var(--harvest-gold);
+    border-radius: .25rem;
 }
 
 form input {
-    background-color: var(--muted-teal);
+    color: white;
+    background-color: var(--charcoal-blue);
     border: none;
     border: 2px solid var(--harvest-gold);
     border-radius: .25rem;
+}
+
+*::selection {
+    color: white;
+    background-color: var(--harvest-gold);
+}
+
+label:has(+ input[required])::after {
+    font-weight: 900;
+    content: ' *';
+    color: var(--harvest-gold);
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus {
+    outline: 2px solid var(--harvest-gold);
+}
+
+form b {
+    color: var(--harvest-gold);
+}
+
+legend {
+    color: var(--harvest-gold);
+    width: fit-content;
+}
+
+label {
+    font-size: .75rem;
+}
+
+label[for="read"] {
+    display: flex;
+    justify-content: space-between;
 }
 
 /* --- CLASSES --- */
@@ -192,7 +266,6 @@ form input {
     display: flex;
     flex-direction: column;
     width: fit-content;
-    font-family: 'Instrument Serif';
 }
 
 .book p,
@@ -201,13 +274,14 @@ button {
     font-size: 1.125rem;
 }
 
+.book>* {
+    font-family: 'Instrument Serif', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+}
+
 .book .title {
     padding: 1.5vh 2.5vw;
     background-color: var(--charcoal-blue);
-}
-
-.book>* {
-    text-align: center;
 }
 
 .remove {
@@ -237,21 +311,27 @@ button {
     accent-color: var(--harvest-gold);
 }
 
-#new {
+#new,
+#add {
     cursor: pointer;
     margin-top: 2rem;
     background-image: url('./assets/images/bookshelf.webp');
     border-radius: .5rem;
     color: white;
-    font-family: 'Instrument Serif';
+    font-family: 'Instrument Serif', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: 900;
-    font-size: 2rem;
     background-position: center;
     border: 5px solid var(--dark-coffee);
     transition: all .3s ease;
 }
 
-#new:hover {
+#new {
+    color: white;
+    font-size: 2rem;
+}
+
+#new:hover,
+#add:hover {
     color: #371808;
     scale: 1.05;
 }

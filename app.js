@@ -27,7 +27,7 @@ function addBookToLibrary(title, author, pages, read) {
 function displayBooks() {
     for (let book of myLibrary) {
 
-        const bookShelf = document.querySelectorAll('.books .shelf');
+        const bookShelves = document.querySelectorAll('.books .shelf');
 
         if (document.querySelector(`.book[data-id="${book.id}"]`)) continue;
 
@@ -50,24 +50,33 @@ function displayBooks() {
         pages.classList.add('pages');
         bookCover.appendChild(pages);
 
+        const label = document.createElement('label');
+        label.innerText = 'Read? ';
+
         const readCheckBox = document.createElement('input');
         readCheckBox.type = 'checkbox';
         readCheckBox.classList.add('read-checkbox');
         if (book.read) readCheckBox.checked = true;
-        bookCover.appendChild(readCheckBox);
+        label.appendChild(readCheckBox);
+        bookCover.appendChild(label);
 
         const removeBtn = document.createElement('button');
         removeBtn.classList.add('remove');
         removeBtn.innerText = 'Remove?';
         bookCover.appendChild(removeBtn);
 
-        if (bookShelf[bookShelf.length - 1].childElementCount >= 3) {
-            const shelf = document.createElement('div');
-            shelf.classList.add('shelf');
-            shelf.appendChild(bookCover);
-            books.appendChild(shelf);
+        const bookShelvesArr = Array.from(bookShelves);
+        const sorted = bookShelvesArr.sort((a, b) => {
+            return a.childElementCount - b.childElementCount;
+        });
+
+        if (sorted[0].childElementCount >= 3) {
+            const newShelf = document.createElement('div');
+            newShelf.classList.add('shelf');
+            newShelf.appendChild(bookCover);
+            books.appendChild(newShelf);
         } else {
-            bookShelf[bookShelf.length - 1].appendChild(bookCover);
+            sorted[0].appendChild(bookCover);
         }
     }
 }
@@ -77,29 +86,28 @@ document.querySelector('main').addEventListener('click', (e) => {
         case e.target.id === 'add-book-dialog':
             e.target.close();
             break;
-        case e.target.id === 'add':
-            e.preventDefault();
-            document.querySelector('#add-book-dialog').close();
-            const form = new FormData(document.querySelector('form'));
-            addBookToLibrary(form.get('title'), form.get('author'), form.get('pages'), form.get('read') === 'on');
-            displayBooks();
-            break;
         case e.target.classList.contains('remove'):
-            const bookShelf = document.querySelectorAll('.books .shelf');
+            const bookShelves = document.querySelectorAll('.books .shelf');
             const found = myLibrary.findIndex((book) => {
                 return book.id === e.target.parentElement.dataset.id;
             });
             myLibrary.splice(found, 1);
             e.target.closest('.book').remove();
-            for (let shelf of bookShelf) {
-                if (shelf.childElementCount <= 0) shelf.remove();
+            for (let shelf of bookShelves) {
+                if (books.childElementCount > 1 && shelf.childElementCount <= 0) shelf.remove();
             }
             break;
         case e.target.classList.contains('read-checkbox'):
             const book = myLibrary.find((book) => {
-                return book.id === e.target.parentElement.dataset.id;
+                return book.id === e.target.closest('.book').dataset.id;
             });
             book.toggleRead();
             break;
     }
+})
+
+document.querySelector('form').addEventListener('submit', () => {
+    const form = new FormData(document.querySelector('form'));
+    addBookToLibrary(form.get('title'), form.get('author'), form.get('pages'), form.get('read') === 'on');
+    displayBooks();
 })
