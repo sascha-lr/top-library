@@ -1,113 +1,134 @@
 "use strict";
 
-const books = document.querySelector('.books');
+const dataController = (() => {
 
-const myLibrary = [];
+    const myLibrary = [];
 
-function Book(title, author, pages, read) {
-    if (!new.target) {
-        throw Error("Use the 'new' operator to create the object!")
+    class Book {
+        constructor(title, author, pages, read) {
+            this.title = title;
+            this.author = author;
+            this.pages = pages;
+            this.read = read;
+            this.id = crypto.randomUUID();
+        }
+
+        toggleRead() {
+            this.read = !this.read;
+        }
+
     }
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
-    this.id = crypto.randomUUID();
-}
 
-Book.prototype.toggleRead = function() {
-    this.read = !this.read;
-}
+    function addBookToLibrary(title, author, pages, read) {
+        const newBook = new Book(title, author, pages, read);
+        myLibrary.push(newBook);
+    }
 
-function addBookToLibrary(title, author, pages, read) {
-    const newBook = new Book(title, author, pages, read);
-    myLibrary.push(newBook);
-}
+    const getLibrary = () => [...myLibrary];
+    const removeBook = (index) => {
+        myLibrary.splice(index, 1);
+    }
+    const toggleRead = (book) => {
+        book.toggleRead();
+    }
 
-function displayBooks() {
-    for (let book of myLibrary) {
+    return { addBookToLibrary, getLibrary, removeBook, toggleRead };
 
-        const bookShelves = document.querySelectorAll('.books .shelf');
+})();
 
-        if (document.querySelector(`.book[data-id="${book.id}"]`)) continue;
+const displayController = (() => {
 
-        const bookCover = document.createElement('div');
-        bookCover.classList.add('book');
-        bookCover.dataset.id = book.id;
+    const books = document.querySelector('.books');
+    const form = document.querySelector('form');
 
-        const title = document.createElement('h2');
-        title.innerText = book.title;
-        title.classList.add('title');
-        bookCover.appendChild(title);
+    function displayBooks() {
+        for (let book of dataController.getLibrary()) {
 
-        const author = document.createElement('h3');
-        author.innerText = book.author;
-        author.classList.add('author');
-        bookCover.appendChild(author);
+            const bookShelves = document.querySelectorAll('.books .shelf');
 
-        const pages = document.createElement('p');
-        pages.innerText = `Pages: ${book.pages}`;
-        pages.classList.add('pages');
-        bookCover.appendChild(pages);
+            if (document.querySelector(`.book[data-id="${book.id}"]`)) continue;
 
-        const label = document.createElement('label');
-        label.innerText = 'Read? ';
+            const bookCover = document.createElement('div');
+            bookCover.classList.add('book');
+            bookCover.dataset.id = book.id;
 
-        const readCheckBox = document.createElement('input');
-        readCheckBox.type = 'checkbox';
-        readCheckBox.classList.add('read-checkbox');
-        if (book.read) readCheckBox.checked = true;
-        label.appendChild(readCheckBox);
-        bookCover.appendChild(label);
+            const title = document.createElement('h2');
+            title.innerText = book.title;
+            title.classList.add('title');
+            bookCover.appendChild(title);
 
-        const removeBtn = document.createElement('button');
-        removeBtn.classList.add('remove');
-        removeBtn.innerText = 'Remove?';
-        bookCover.appendChild(removeBtn);
+            const author = document.createElement('h3');
+            author.innerText = book.author;
+            author.classList.add('author');
+            bookCover.appendChild(author);
 
-        const bookShelvesArr = Array.from(bookShelves);
-        const sorted = bookShelvesArr.sort((a, b) => {
-            return a.childElementCount - b.childElementCount;
-        });
+            const pages = document.createElement('p');
+            pages.innerText = `Pages: ${book.pages}`;
+            pages.classList.add('pages');
+            bookCover.appendChild(pages);
 
-        if (sorted[0].childElementCount >= 3) {
-            const newShelf = document.createElement('div');
-            newShelf.classList.add('shelf');
-            newShelf.appendChild(bookCover);
-            books.appendChild(newShelf);
-        } else {
-            sorted[0].appendChild(bookCover);
+            const label = document.createElement('label');
+            label.innerText = 'Read? ';
+
+            const readCheckBox = document.createElement('input');
+            readCheckBox.type = 'checkbox';
+            readCheckBox.classList.add('read-checkbox');
+            if (book.read) readCheckBox.checked = true;
+            label.appendChild(readCheckBox);
+            readCheckBox.dataset.action = 'check-read';
+            bookCover.appendChild(label);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.classList.add('remove');
+            removeBtn.innerText = 'Remove?';
+            removeBtn.dataset.action = 'remove';
+            bookCover.appendChild(removeBtn);
+
+            const bookShelvesArr = Array.from(bookShelves);
+            const sorted = bookShelvesArr.sort((a, b) => {
+                return a.childElementCount - b.childElementCount;
+            });
+
+            if (sorted[0].childElementCount >= 3) {
+                const newShelf = document.createElement('div');
+                newShelf.classList.add('shelf');
+                newShelf.appendChild(bookCover);
+                books.appendChild(newShelf);
+            } else {
+                sorted[0].appendChild(bookCover);
+            }
         }
     }
-}
 
-document.querySelector('main').addEventListener('click', (e) => {
-    switch (true) {
-        case e.target.id === 'add-book-dialog':
-            e.target.close();
-            break;
-        case e.target.classList.contains('remove'):
+    // --- EVENT LISTENERS --- //
+
+    document.querySelector('main').addEventListener('click', (e) => {
+
+        if (e.target.closest('[data-action="remove"]')) {
             const bookShelves = document.querySelectorAll('.books .shelf');
-            const found = myLibrary.findIndex((book) => {
+            const found = dataController.getLibrary().findIndex((book) => {
                 return book.id === e.target.parentElement.dataset.id;
             });
-            myLibrary.splice(found, 1);
+            dataController.removeBook(found);
             e.target.closest('.book').remove();
             for (let shelf of bookShelves) {
                 if (books.childElementCount > 1 && shelf.childElementCount <= 0) shelf.remove();
             }
-            break;
-        case e.target.classList.contains('read-checkbox'):
-            const book = myLibrary.find((book) => {
+        }
+        if (e.target.closest('[data-action="check-read"]')) {
+            const book = dataController.getLibrary().find((book) => {
                 return book.id === e.target.closest('.book').dataset.id;
             });
-            book.toggleRead();
-            break;
-    }
-})
+            dataController.toggleRead(book);
 
-document.querySelector('form').addEventListener('submit', () => {
-    const form = new FormData(document.querySelector('form'));
-    addBookToLibrary(form.get('title'), form.get('author'), form.get('pages'), form.get('read') === 'on');
-    displayBooks();
-})
+        }
+    })
+
+    form.addEventListener('submit', () => {
+        const formData = new FormData(form);
+        dataController.addBookToLibrary(formData.get('title'), formData.get('author'), formData.get('pages'), formData.get('read') === 'on');
+        displayBooks();
+        form.reset();
+    })
+})();
+
